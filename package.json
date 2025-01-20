@@ -3,7 +3,6 @@
     "version": "0.1.0",
     "license": "MIT",
     "private": true,
-    "homepage": "https://dashboard.isc.money/meteora_dlmm_ui",
     "dependencies": {
         "@coral-xyz/anchor": "^0.29.0",
         "@solana/codecs-data-structures": "^2.0.0-preview.1.20240321043841.125fc1540cfbc0a4afdba5aabac0884c750e58c1",
@@ -24,7 +23,7 @@
     },
     "scripts": {
         "start": "react-app-rewired start",
-        "build": "rm -r ./build && react-app-rewired build",
+        "build": "react-app-rewired build",
         "build-docker": "react-app-rewired build",
         "test": "react-app-rewired test",
         "eject": "react-scripts eject",
