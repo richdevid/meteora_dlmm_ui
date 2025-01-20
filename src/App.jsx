@@ -2,10 +2,7 @@ import './App.css';
 import { Connection } from '@solana/web3.js';
 import { Dashboard } from './components/Dashboard';
 import { get_pools } from './sdk/utils/utils';
-import { 
-    useEffect, 
-    useState 
-} from 'react';
+import { useEffect, useState } from 'react';
 import { 
     ConnectionContext, 
     ErrorContext, 
@@ -13,45 +10,46 @@ import {
     PositionsContext, 
     PriceContext
 } from './contexts/Contexts';
-// import { DEFAULT_RPC, DEFAULT_BIRDEYE_KEY } from './constants';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 
 function App() {
 
-    const DEFAULT_RPC = process.env.REACT_APP_RPC;
-    const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY;
-    const [ rpc, setRpc ] = useState(DEFAULT_RPC);
-    const [ apiKey, setApiKey ] = useState(DEFAULT_BIRDEYE_KEY);
-    const [ connection, setConnection ] = useState(new Connection(DEFAULT_RPC));
-    const [ openPositions, setOpenPositions ] = useState([]);
-    const [ openSortedPositions, setOpenSortedPositions ] = useState([]);
-    const [ closedPositions, setClosedPositions ] = useState([]);
-    const [ closedSortedPositions, setClosedSortedPositions ] = useState([]);
-    const [ disabledPools, setDisabledPools ] = useState([]);
-    const [ pools, setPools ] = useState([]);
-    const [ tokens, setTokens ] = useState([]);
-    const [ usedTokensList, setUsedTokensList ] = [];
-    const [ tokenPrices, setTokenPrices ] = useState({});
-    const [error, setError] = useState(undefined)
-    useEffect(() => {
-        const getPools = async () => {
-            let pls = await get_pools(connection);
-            let tkns = await(await fetch('https://token.jup.ag/all')).json();
-            setPools(pls);
-            setTokens(tkns);
-        }
-        getPools()
-    }, [])
+    const DEFAULT_RPC = process.env.REACT_APP_RPC || 'https://solana-mainnet.g.alchemy.com/v2/WWNnnaSdCEQ7Grv8nsw5f0KCq1Voy0w5'; // Replace with a valid default RPC URL
+    const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY || 'fbb974cbcf6b4f93b9cf15bbe24033e7'; // Replace with a default API key if needed
+
+    const [rpc, setRpc] = useState(DEFAULT_RPC);
+    const [apiKey, setApiKey] = useState(DEFAULT_BIRDEYE_KEY);
+    const [connection, setConnection] = useState(() => new Connection(DEFAULT_RPC));
+    const [openPositions, setOpenPositions] = useState([]);
+    const [openSortedPositions, setOpenSortedPositions] = useState([]);
+    const [closedPositions, setClosedPositions] = useState([]);
+    const [closedSortedPositions, setClosedSortedPositions] = useState([]);
+    const [disabledPools, setDisabledPools] = useState([]);
+    const [pools, setPools] = useState([]);
+    const [tokens, setTokens] = useState([]);
+    const [usedTokensList, setUsedTokensList] = useState([]);
+    const [tokenPrices, setTokenPrices] = useState({});
+    const [error, setError] = useState(undefined);
 
     useEffect(() => {
-        // console.log(tokens);
-        // console.log(pools);
-    }, [pools, tokens]);
+        const getPools = async () => {
+            try {
+                const pls = await get_pools(connection);
+                const tkns = await (await fetch('https://token.jup.ag/all')).json();
+                setPools(pls);
+                setTokens(tkns);
+            } catch (err) {
+                console.error('Error fetching pools or tokens:', err);
+                setError(err.message);
+            }
+        };
+        getPools();
+    }, [connection]);
 
     useEffect(() => {
         setConnection(new Connection(rpc));
-    }, [rpc])
+    }, [rpc]);
 
     return (
         <ConnectionContext.Provider value={{
@@ -78,11 +76,11 @@ function App() {
                     setClosedSortedPositions
                 }}>
                     <PriceContext.Provider value={{tokenPrices, setTokenPrices}}>
-                        <ErrorContext.Provider value={{error, setError}} >
+                        <ErrorContext.Provider value={{error, setError}}>
                             <div className="App">
-                                <Header/>
-                                <Dashboard/>
-                                <Footer/>
+                                <Header />
+                                <Dashboard />
+                                <Footer />
                             </div>
                         </ErrorContext.Provider>
                     </PriceContext.Provider>
@@ -93,4 +91,3 @@ function App() {
 }
 
 export default App;
-
