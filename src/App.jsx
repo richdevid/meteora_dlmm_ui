@@ -15,7 +15,7 @@ import { Footer } from './components/Footer';
 
 function App() {
 
-    const DEFAULT_RPC = process.env.REACT_APP_RPC || 'https://weathered-nameless-valley.SOLANA_MAINNET.quiknode.pro/d563749eb5b84e1f819f8b6805f644a01479620c'; // Replace with a valid default RPC URL
+    const DEFAULT_RPC = process.env.REACT_APP_RPC || 'https://solana-rpc.publicnode.com'; // Replace with a valid default RPC URL
     const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY || 'fbb974cbcf6b4f93b9cf15bbe24033e7'; // Replace with a default API key if needed
 
     const [rpc, setRpc] = useState(DEFAULT_RPC);
